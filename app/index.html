@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Typewondo</title>
+    <style>
+      :root {
+        --color-bg: #000;
+        --color-fg: #fff;
+        --color-dim: #666;
+        --fonts: "Iosevka Term", Menlo, monospace;
+      }
+
+      * {
+        font-variant-ligatures: none;
+        font-feature-settings: "liga" 0;
+      }
+
+      body {
+        background: var(--color-bg);
+        color: var(--color-fg);
+        margin: 2em;
+        font-family: var(--fonts);
+        font-size: 32px;
+      }
+
+      .keymap {
+        .layer {
+          display: inline-block;
+          width: 15em;
+          white-space: pre;
+        }
+      }
+
+      .dim {
+        color: var(--color-dim);
+      }
+
+      input[type="text"] {
+        color: var(--color-fg);
+        font-family: var(--fonts);
+        font-size: 1em;
+
+        outline: none;
+        background: none;
+        border: none;
+
+        &::placeholder {
+          color: var(--color-dim);
+        }
+      }
+
+      .prompt {
+        padding: 3em 0;
+        padding-left: 15em;
+
+        input[type="text"] {
+          font-size: 3em;
+        }
+      }
+
+      .stats {
+        font-size: 0.7em;
+        position: absolute;
+        bottom: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="keymap">{keymap}</div>
+    <div class="prompt">
+      <input
+        id="prompt"
+        type="text"
+        placeholder="{prompt}"
+        spellcheck="false"
+      />
+    </div>
+    <div class="stats">Accuracy: <span id="accuracy">N/A</span></div>
+
+    <script>
+      const ngrams = NGRAMS;
+      var i = 0;
+
+      const input = document.getElementById("prompt");
+      input.addEventListener("input", onInput);
+      input.placeholder = ngrams[i];
+      var prev = "";
+
+      const accuracy = document.getElementById("accuracy");
+      var hits = 0,
+        misses = 0;
+
+      function onInput(e) {
+        const expected = e.target.placeholder;
+        const actual = e.target.value;
+
+        if (actual === expected) {
+          hits++;
+          e.target.value = "";
+          prev = "";
+          i = (i + 1) % ngrams.length;
+          e.target.placeholder = ngrams[i];
+        } else if (expected.startsWith(actual) && actual.startsWith(prev)) {
+          hits++;
+          prev = actual;
+        } else {
+          misses++;
+          e.target.value = "";
+          prev = "";
+        }
+
+        const total = hits + misses;
+        const pct = ((hits / total) * 100).toFixed(1);
+        accuracy.innerHTML = `${pct}% (${hits}/${total})`;
+      }
+    </script>
+  </body>
+</html>
