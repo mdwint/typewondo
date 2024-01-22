@@ -44,17 +44,17 @@
         outline: none;
         background: none;
         border: none;
-
-        &::placeholder {
-          color: var(--color-dim);
-        }
       }
 
       .prompt {
-        padding: 3em 0;
-        padding-left: 15em;
+        position: relative;
+        margin: 3em 0;
+        margin-left: 15em;
 
-        input[type="text"] {
+        .overlap {
+          position: absolute;
+          top: 0;
+          left: 0;
           font-size: 3em;
         }
       }
@@ -69,10 +69,13 @@
   <body>
     <div class="keymap">{keymap}</div>
     <div class="prompt">
+      <div id="preview" class="dim overlap"></div>
       <input
         id="prompt"
+        class="overlap"
         type="text"
-        placeholder="{prompt}"
+        autocapitalize="false"
+        autocomplete="false"
         spellcheck="false"
       />
     </div>
@@ -84,7 +87,9 @@
 
       const input = document.getElementById("prompt");
       input.addEventListener("input", onInput);
-      input.placeholder = ngrams[i];
+
+      const preview = document.getElementById("preview");
+      preview.innerText = ngrams[i];
       var prev = "";
 
       const accuracy = document.getElementById("accuracy");
@@ -92,21 +97,21 @@
         misses = 0;
 
       function onInput(e) {
-        const expected = e.target.placeholder;
-        const actual = e.target.value;
+        const expected = preview.innerText;
+        const actual = input.value;
 
         if (actual === expected) {
           hits++;
-          e.target.value = "";
+          input.value = "";
           prev = "";
           i = (i + 1) % ngrams.length;
-          e.target.placeholder = ngrams[i];
+          preview.innerText = ngrams[i];
         } else if (expected.startsWith(actual) && actual.startsWith(prev)) {
           hits++;
           prev = actual;
         } else {
           misses++;
-          e.target.value = "";
+          input.value = "";
           prev = "";
         }
 
