@@ -19,15 +19,19 @@
       body {
         background: var(--color-bg);
         color: var(--color-fg);
-        margin: 2em;
         font-family: var(--fonts);
         font-size: 32px;
+        margin: 0;
+      }
+
+      .container {
+        padding: 2em;
       }
 
       .keymap {
         .layer {
           display: inline-block;
-          width: 15em;
+          padding-right: 3em;
           white-space: pre;
         }
       }
@@ -48,8 +52,8 @@
 
       .prompt {
         position: relative;
+        padding-bottom: 4em;
         margin: 3em 0;
-        margin-left: 15em;
 
         .overlap {
           position: absolute;
@@ -61,25 +65,26 @@
 
       .stats {
         font-size: 0.7em;
-        position: absolute;
-        bottom: 2em;
       }
     </style>
   </head>
   <body>
-    <div class="keymap">{keymap}</div>
-    <div class="prompt">
-      <div id="preview" class="dim overlap"></div>
-      <input
-        id="prompt"
-        class="overlap"
-        type="text"
-        autocapitalize="false"
-        autocomplete="false"
-        spellcheck="false"
-      />
+    <div class="container">
+      <div class="stats">Accuracy: <span id="accuracy">N/A</span></div>
+      <div class="prompt">
+        <div id="preview" class="dim overlap"></div>
+        <input
+          id="prompt"
+          class="overlap"
+          type="text"
+          autocapitalize="false"
+          autocomplete="false"
+          spellcheck="false"
+          autofocus
+        />
+      </div>
+      <div class="keymap">{keymap}</div>
     </div>
-    <div class="stats">Accuracy: <span id="accuracy">N/A</span></div>
 
     <script>
       const ngrams = NGRAMS;
