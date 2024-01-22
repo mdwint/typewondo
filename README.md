@@ -4,6 +4,5 @@
 
 ```console
 $ python app/main.py ~/foo/**.py ~/bar/**.txt -n 4 --with-punctuation
-Wrote build
-$ open build/index.html
+Serving on http://127.0.0.1:8000
 ```
