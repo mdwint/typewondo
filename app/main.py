@@ -13,8 +13,8 @@ def main():
     p = build_args_parser()
     p.add_argument(
         "--layout",
-        choices=["qwerty", "colemak_dh"],
-        default="colemak_dh",
+        choices=config.layouts,
+        default=config.layouts[0],
         help="Layout to display keymap for",
     )
     p.add_argument("--port", type=int, default=8000, help="HTTP port")
@@ -47,8 +47,9 @@ def main():
 
 def render_index(layout: str, ngrams: list[str]) -> str:
     keymap = "\n".join(
-        f'<div class="layer">{dedent(config.keymap[layer]).strip()}</div>'
-        for layer in ("symbols", layout, "numbers")
+        f'<div class="layer">{dedent(layer).strip()}</div>'
+        for name, layer in config.keymap.items()
+        if name == layout or name not in config.layouts
     ).replace("·", '<span class="dim">·</span>')
 
     template = (Path(__file__).parent / "index.html").read_text()

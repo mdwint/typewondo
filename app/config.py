@@ -1,3 +1,5 @@
+layouts = ["qwerty", "colemak_dh"]
+
 keymap = dict(
     qwerty=r"""
     Q W E R T    Y U I O P
