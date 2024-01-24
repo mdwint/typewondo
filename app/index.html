@@ -28,15 +28,19 @@
         padding: 2em;
       }
 
+      .stats {
+        font-size: 0.7em;
+      }
+
+      .dim {
+        color: var(--color-dim);
+      }
+
       .keymap {
         .layer {
           padding-bottom: 2em;
           white-space: pre;
         }
-      }
-
-      .dim {
-        color: var(--color-dim);
       }
 
       input[type="text"] {
@@ -63,8 +67,32 @@
         }
       }
 
-      .stats {
-        font-size: 0.7em;
+      .flash-hit {
+        animation-name: flash-hit;
+        animation-duration: 0.5s;
+      }
+
+      .flash-miss {
+        animation-name: flash-miss;
+        animation-duration: 0.5s;
+      }
+
+      @keyframes flash-hit {
+        from {
+          color: var(--color-bg);
+        }
+        to {
+          color: var(--color-dim);
+        }
+      }
+
+      @keyframes flash-miss {
+        from {
+          color: var(--color-fg);
+        }
+        to {
+          color: var(--color-dim);
+        }
       }
     </style>
   </head>
@@ -119,13 +147,17 @@
           prev = "";
           i = (i + 1) % ngrams.length;
           preview.innerText = ngrams[i];
+          preview.classList.add("flash-hit");
         } else if (expected.startsWith(actual) && actual.startsWith(prev)) {
           hits++;
           prev = actual;
+          preview.classList.remove("flash-hit");
+          preview.classList.remove("flash-miss");
         } else {
           misses++;
           input.value = "";
           prev = "";
+          preview.classList.add("flash-miss");
         }
 
         const total = hits + misses;
