@@ -5,8 +5,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from textwrap import dedent
 
-import config
-from ngrams import build_args_parser, find_ngrams
+from . import config
+from .ngrams import build_args_parser, find_ngrams
 
 
 def main() -> None:

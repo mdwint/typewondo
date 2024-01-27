@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "typewondo"
+version = "0.1.0"
+description = "Combat sport involving punching and kicking the keyboard."
+authors = ["Matteo De Wint <matteo@mailfence.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.scripts]
+typewondo = "typewondo.__main__:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
