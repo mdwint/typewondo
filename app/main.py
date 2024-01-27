@@ -6,10 +6,10 @@ from pathlib import Path
 from textwrap import dedent
 
 import config
-from ngrams import build_args_parser, top_ngrams
+from ngrams import build_args_parser, find_ngrams
 
 
-def main():
+def main() -> None:
     p = build_args_parser()
     p.add_argument(
         "--layout",
@@ -20,7 +20,12 @@ def main():
     p.add_argument("--port", type=int, default=8000, help="HTTP port")
     args = p.parse_args()
 
-    ngrams = top_ngrams(args.paths, args.n, args.top, args.with_punctuation)
+    all_ngrams = find_ngrams(args.paths, args.n, args.with_punctuation)
+    print(
+        f"Found {len(all_ngrams)} ngrams in {len(args.paths)} files. "
+        f"Selecting top {args.top}."
+    )
+    ngrams = [g for g, _ in all_ngrams.most_common(args.top)]
     random.shuffle(ngrams)
 
     index_html = render_index(args.layout, ngrams).encode()

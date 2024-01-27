@@ -9,21 +9,17 @@ def ngrams(text: str, n: int = 2) -> Iterator[tuple[str, ...]]:
     return zip(*(text[i:] for i in range(n)))
 
 
-def top_ngrams(
-    paths: list[Path],
-    n: int = 2,
-    top: int = 100,
-    with_punctuation: bool = False,
-) -> list[str]:
-    c = Counter(
-        ngram
+def find_ngrams(
+    paths: list[Path], n: int = 2, with_punctuation: bool = False
+) -> Counter[str]:
+    return Counter(
+        "".join(ngram)
         for path in paths
         if not any(part.startswith(".") for part in path.parts)
         for word in path.read_text().split()
         for ngram in ngrams(word, n)
         if not with_punctuation or any(char in ngram for char in string.punctuation)
     )
-    return ["".join(ngram) for ngram, _ in c.most_common(top)]
 
 
 def build_args_parser() -> ArgumentParser:
@@ -37,8 +33,12 @@ def build_args_parser() -> ArgumentParser:
 
 def main() -> None:
     args = build_args_parser().parse_args()
-    for ngram in top_ngrams(args.paths, args.n, args.top, args.with_punctuation):
-        print(ngram)
+
+    ngrams = find_ngrams(args.paths, args.n, args.with_punctuation)
+    print(f"Found {len(ngrams)} ngrams in {len(args.paths)} files.")
+
+    for ngram, count in ngrams.most_common(args.top):
+        print(f"{ngram} ({count})")
 
 
 if __name__ == "__main__":
